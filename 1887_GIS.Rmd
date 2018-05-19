@@ -2,7 +2,7 @@
 title: "GIS 1887"
 author: "Ye Seul Byeon"
 date: "5/16/2018"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -18,7 +18,7 @@ theme_set(ggthemes::theme_map())
 
 ```{r import-tabular}
 #reading in excel file
-list.files('data')
+#list.files('data')
 tabular <- read_xlsx('data/JapanG_RawData_beta.xlsx')
 
 #tidying the tabular dataset
