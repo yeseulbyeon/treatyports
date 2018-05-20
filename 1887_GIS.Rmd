@@ -12,6 +12,7 @@ library(sp)
 library(ggmap)
 library(readxl)
 library(knitr)
+library(viridis)
 
 theme_set(ggthemes::theme_map())
 ```
@@ -20,7 +21,7 @@ theme_set(ggthemes::theme_map())
 #reading in excel file
 #list.files('data')
 tabular <- read_xlsx('data/JapanG_RawData_beta.xlsx')
-
+tabular
 #tidying the tabular dataset
 tabular_tidy <- tabular %>%
   #converting meiji year to calendar year
@@ -31,7 +32,14 @@ tabular_tidy <- tabular %>%
 #rename columns
 names(tabular_tidy)[7:11] = c("All_Bovine", "All_Horses", "Malnutrition_Deaths", "Bovine_Bred", "Horses_Bred")
 
-head(tabular_tidy)
+str(tabular_tidy)
+
+sum(tabular_tidy$All_Bovine, na.rm = TRUE)
+
+tabular_tidy %>%
+  group_by(Kuni_Nm) %>%
+  summarize(All_Bovine = sum(All_Bovine))
+
 ```
 ```{r animal-consumption-clean}
 #animal_consumption <- read_csv('data/animal_product_cleaned.csv') %>%
@@ -51,51 +59,109 @@ japan1887_kuni <- readOGR("./data/JapanKuni_1887.shp")
 hokkaido1887_kuni <- readOGR("./data/JapanKuni_Hokkaido__1887.shp")
 japan1887_gun <- readOGR("./data/JapanGun_1887.shp")
 japan1887_ken <- readOGR("./data/JapanKen_1887.shp")
+
+joined <- readOGR("./data/new_shp.shp")
 ```
 ```{r process-shp}
 #hokkaido kuni
-(hokkaido1887_process <- hokkaido1887_kuni %>%
+hokkaido1887_process <- hokkaido1887_kuni %>%
   fortify(region = "KUNI_RM") %>%
   as_tibble() %>%
-  left_join(hokkaido1887_kuni@data, by = c("id" = "KUNI_RM")))
+  left_join(hokkaido1887_kuni@data, by = c("id" = "KUNI_RM"))
+
 
 #japan kuni
-(japan1887_kuni_process <- japan1887_kuni %>%
+japan1887_kuni_process <- japan1887_kuni %>%
   fortify(region = "KUNI_RM") %>%
   as_tibble() %>%
-  left_join(japan1887_kuni@data, by = c("id" = "KUNI_RM")))
+  left_join(japan1887_kuni@data, by = c("id" = "KUNI_RM")) %>%
+  mutate(Kuni_ID = OBJECTID)
+
+
+names(japan1887_kuni_process)[6]<-"Kuni_Nm"
+japan1887_kuni_process <- japan1887_kuni_process %>%
+  mutate(id = Kuni_ID)
+
 
 #japan gun
-(japan1887_gun_process <- japan1887_gun %>%
+japan1887_gun_process <- japan1887_gun %>%
   fortify(region = "GUN_RM") %>%
   as_tibble() %>%
-  left_join(japan1887_gun@data, by = c("id" = "GUN_RM")))
+  left_join(japan1887_gun@data, by = c("id" = "GUN_RM"))
 
 #japan ken
-(japan1887_ken_process <- japan1887_ken %>%
+japan1887_ken_process <- japan1887_ken %>%
   fortify(region = "KEN_RM") %>%
   as_tibble() %>%
-  left_join(japan1887_ken@data, by = c("id" = "KEN_RM")))
+  left_join(japan1887_ken@data, by = c("id" = "KEN_RM"))
+
+new_shp <- joined %>%
+  fortify(region = "KUNI_RM") %>%
+  as_tibble() %>%
+  left_join(joined@data, by = c("id" = "KUNI_RM"))
+
+new_shp <- new_shp %>%
+  select(long, lat, id, OBJECTID, JapanG_R99.9, JapanG_R99.10, JapanG_R99.34, JapanG_R99.73, JapanG_R99.74)
+
+str(new_shp)
 ```
 
 
 
-```{r loading-basemaps}
+```{r loading-basemaps, eval = FALSE}
 (hokkaido <- ggplot(data = hokkaido1887_process, mapping = aes(x = long, y = lat, group = group)) + 
   coord_fixed(1.3) + 
   geom_polygon(color = "#252525", fill = "#a6bddb", size = 0.2))
 
-(japan_kuni <- ggplot(data = japan1887_kuni_process, mapping = aes(x = long, y = lat, group = group)) + 
+
+#(japan_kuni <- ggplot(data = japan1887_kuni_process, mapping = aes(x = long, y = lat, group = group)) + 
   coord_fixed(1.3) + 
   geom_polygon(color = "#252525", fill = "#a6bddb", size = 0.2))
 
-(japan_ken <- ggplot(data = japan1887_ken_process, mapping = aes(x = long, y = lat, group = group)) + 
+ggplot(data = japan1887_ken_process, mapping = aes(x = long, y = lat, group = group)) + 
   coord_fixed(1.3) + 
-  geom_polygon(color = "#252525", fill = "#a6bddb", size = 0.2))
+  geom_polygon(color = "#252525", fill = "#a6bddb", size = 0.2) +
+  geom_text(label = Ken_Nm)
+
+japan1887_ken_process
 
 (japan_gun <- ggplot(data = japan1887_gun_process, mapping = aes(x = long, y = lat, group = group)) + 
   coord_fixed(1.3) + 
   geom_polygon(color = '#252525', fill = "#a6bddb", size = 0.2))
 
+(joined <- ggplot(data = joined, mapping = aes(x = long, y = lat, group = group)) + 
+  coord_fixed(1.3) + 
+  geom_polygon(color = "#252525", fill = "#a6bddb", size = 0.2))
+
+
 ```
+
+```{r}
+sum_tabular_cows <- tabular_tidy %>%
+  group_by(Kuni_Nm, Kuni_ID) %>%
+  summarize(All_Bovine = sum(All_Bovine, na.rm = TRUE))
+
+sum_tabular_horses <- tabular_tidy %>%
+  group_by(Kuni_Nm, Kuni_ID) %>%
+  summarize(All_Horses = sum(All_Horses, na.rm = TRUE))
+
+
+cattle_kuni <- ggplot() + 
+    ggtitle("No. of Cows, by Kuni") +
+    geom_map(aes(x = long, y = lat, map_id = Kuni_ID), data = japan1887_kuni_process, map = japan1887_kuni_process, fill = "#FFFFFF", color = "#000000", size = 0.15) +
+    geom_map(data = sum_tabular_cows, map = japan1887_kuni_process, aes(fill = All_Bovine, map_id = Kuni_ID), size=0.15) + 
+  coord_fixed(x = japan1887_kuni_process$long, y = japan1887_kuni_process$lat) + 
+  scale_fill_viridis()
+
+horse_kuni <- ggplot() + 
+    ggtitle("No. of Horses, by Kuni") +
+    geom_map(data = japan1887_kuni_process, map = japan1887_kuni_process, 
+             aes(x = long, y = lat, map_id = Kuni_ID),  fill = "#FFFFFF", color = "#000000", size = 0.15) +
+    geom_map(data = sum_tabular_horses, map = japan1887_kuni_process, 
+             aes(fill = All_Horses, map_id = Kuni_ID), size=0.15) + 
+  coord_fixed(x = japan1887_kuni_process$long, y = japan1887_kuni_process$lat) + 
+  scale_fill_viridis()
+
+```
+
 
