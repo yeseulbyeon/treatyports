@@ -13,8 +13,12 @@ library(ggmap)
 library(readxl)
 library(knitr)
 library(viridis)
+library(ggthemes)
+library(plotly)
+knitr::opts_chunk$set(echo = TRUE)
 
-theme_set(ggthemes::theme_map())
+
+theme_set(theme_map())
 ```
 
 ```{r import-tabular}
@@ -32,17 +36,32 @@ tabular_tidy <- tabular %>%
 #rename columns
 names(tabular_tidy)[7:11] = c("All_Bovine", "All_Horses", "Malnutrition_Deaths", "Bovine_Bred", "Horses_Bred")
 ```
-```{r animal-consumption-clean, eval = FALSE}
-animal_consumption <- read_csv('data/animal_product_cleaned.csv') %>%
-  select(-c(8:11))
 
-cols_to_change = c(2, 3, 5:8)
-for(i in cols_to_change){
-   class(animal_consumption[, i]) = "double"
-}
-str(animal_consumption)
+```{r animal-consumption-clean, eval = FALSE}
+animal_products <- read_xlsx('data/animal_products_japan.xlsx')
+
+
+ggplot(data = animal_products, aes(x = Year, y = Raw_Milk))+
+  geom_bar(stat = "identity") +
+  theme_tufte() +
+  labs(
+    title = "Production of Raw Milk in Japan, 1894-2003",
+    y = "Raw Milk Production (in tons)",
+    x = "Year"
+  )
+
+
+#p <- plot_ly(animal_products, x = ~Year, y = ~Raw_Milk, type = 'bar',
+#             marker = list(color = 'rgb(158,202,225)',
+#                      line = list(color = 'rgb(8,48,107)',
+#                                  width = 1.5))) %>%
+#  layout(title = "January 2013 Sales Report",
+#         xaxis = list(title = ""),
+#         yaxis = list(title = ""))
+
 
 ```
+
 
 
 ```{r read-shp}
