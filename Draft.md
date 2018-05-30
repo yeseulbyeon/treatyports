@@ -6,15 +6,41 @@ Ye Seul Byeon
 Introduction
 ------------
 
-As the critical success of the recent film *Isle of Dogs* attests, the curious relationship between the Japanese people and their animal counterparts has a particular hold on the popular imagination. This popular attention nearly matched by scholarly attention. In recent years, the subgenre of “animal studies” has sustained a bounty of rich scholarly works that, together with other works in the broader field of environmental history, form a new critical wave in modern Japanese history. Whether or not this constitutes an environmental "turn" is an open question, but I concur with many of these scholars that mastery over (and exploitation of) the natural world make up an important pillar of Japan’s modern transformation.
+As the critical success of the recent film *Isle of Dogs* attests, the curious relationship between the Japanese people and their animal counterparts has a particular hold on the popular imagination. This popular attention is nearly matched by scholarly attention. In recent years, the subgenre of “animal studies” has sustained a bounty of rich scholarly works that, together with other works in the broader field of environmental history, form a new critical wave in modern Japanese history. Whether or not this can be identified an environmental "turn" is an open question, but I concur with many of these scholars that mastery over (and exploitation of) the natural world constitutes an important pillar of Japan’s modern transformation.
 
-While all Japanese treaty ports are sites of radical change in their own right, Hakodate’s transformations were informed by important subtexts that both prefigure and outlast the duration of the Ansei treaties. The first of these subtexts concerns its location at the southeastern tip of Hokkaido, which has historically rendered it a contact zone between societies indigenous to the island and the increasingly expansionist societies to its south. (The boundaries between the two do not necessarily map neatly onto Ainu/Wajin ethnic boundaries - as David Howell points out, the end of the Tokugawa period saw significant migratory flows of wage laborers from northern Honshu to the fisheries of Hokkaido.)
+While all Japanese treaty ports are sites of radical change in their own right, Hakodate’s transformations were informed by important subtexts that both prefigure and outlast the duration of the Ansei treaties. The first of these subtexts concerns its location at the southeastern tip of Hokkaido, which has historically rendered it a contact zone between societies indigenous to the island and the increasingly expansionist societies to its south. (The boundaries between the two do not necessarily map neatly onto Ainu/Wajin ethnic boundaries - as David Howell points out, the end of the Tokugawa period saw significant migratory flows of wage laborers from northern Honshu to the fisheries of Hokkaido, which was complemented by the increasing integration of the Ainu into the economic order of the Shogunate.)
 
-Two crucial junctures punctuate the evolution of this relationship — the consolidation of the early modern state in the 17th and 18th century, and the consolidation of the Meiji state in the late 19th century. At each turn, we find Hokkaido enmeshed in a deeper web of economic and political dependency, while simultaneously being rebranded as a periphery and a cultural “other” vis-a-vis the center. Hakodate figures into this earlier story as a local economic hub and a regional node in the growing network threading together a national capitalist economy. The second subtext concerns the “discovery” of Hokkaido's natural resources in the late 19th century, chief among which was its animals. Among the various species that form Hokkaido's animal estate, two large mammals come to mind for the key roles they specifically played in shaping the treaty port of Hakodate: whales and cows.
+``` r
+hokkaido_df <- data.frame(
+  city = c("Hakodate", "Matsumae", "Sapporo"),
+  lon = c(141, 140, 141.35),
+  lat = c(41.8, 41.4, 43),
+  stringsAsFactors = FALSE
+) %>%
+  filter (city != "Hakodate")
+
+hakodate <- data.frame(
+  city = c("Hakodate", "Matsumae", "Sapporo"),
+  lon = c(141, 140, 141.35),
+  lat = c(41.8, 41.4, 43),
+  stringsAsFactors = FALSE
+) %>%
+  filter (city == "Hakodate")
+
+leaflet() %>% 
+  addProviderTiles(providers$Esri.WorldTerrain) %>%
+  setView(141, 41.8, zoom = 6) %>%
+  addCircleMarkers(data = hokkaido_df, ~lon, ~lat, popup = ~as.character(city), 
+                   label = ~as.character(city), radius = 3, stroke = TRUE, 
+                   fillOpacity = 1, color = "#1c9099") %>%
+  addCircleMarkers(data = hakodate, ~lon, ~lat, popup = ~as.character(city), 
+                   label = ~as.character(city), radius = 3, stroke = TRUE, fillOpacity = 1, 
+                   color = "#ffa500")
+```
+
+Two crucial junctures punctuate the evolution of this relationship — the consolidation of the early modern state in the 17th and 18th century, and the consolidation of the Meiji state in the late 19th century. At each turn, we find Hokkaido enmeshed in a deeper web of economic and political dependency, while simultaneously being rebranded as a periphery and a cultural “other” vis-a-vis the center. Hakodate figures into this story as a local economic hub and a regional node in the expanding trade network, although still a second city to Matsumae in this role until its designation as a treaty port. The second subtext concerns the “discovery” of Hokkaido's natural resources in the late 19th century, chief among which was its animals. Among the various species that form Hokkaido's animal estate, two large mammals come to mind for the key roles they specifically played in shaping the treaty port of Hakodate: whales and cows.
 
 The harvest of whale oil off Hakodate's shores was one of the most important economic impetuses behind the gunboat diplomacy that "opened" Japan to the West. The treaty of Kanagawa specifically earmarked Hakodate - a strategic, but by no means a central port from the Bakufu's perspective - as one of two "open ports" for use by American vessels. Its subsequent designation as a treaty port precipitated a curious form of urban development that reflected the needs and desires of an unlikely cast of resident treaty powers - America and Russia. It also reflected Hokkaido's exceptional status as a "new frontier" in the grand scheme of Japan's ongoing state-building process in the late 19th century.
-
-If human interactions with whales inform the early seaward development of Hakodate, human interactions with cows provide us with a window into its landward development. Alfred Crosby is widely credited with theorizing and popularizing the idea of "ecological imperialism" to describe how the military conquest of the New World occurred alongside radical and catastrophic changes to its ecology. Crosby argues that an important ramification of these multifarious waves of conquest was the creation of "Neo-Europes" -- areas of intense European settler colonialism, where the physical environment gradually came to share many of the features of comparable temperate zones across the Atlantic. Applying this framework to Hakodate, we may inquire whether its ecological transformation at the hands of new settlers, both from across the Pacific Ocean and the Tsugaru Strait, merits the application of the term "ecological imperialism." In other words, might we be able to label Hakodate, and Hokkaido more broadly, as a "Neo-America" or a "Neo-Japan"?
 
 If human interactions with whales inform the early seaward development of Hakodate, human interactions with cows provide us with a window into its landward development. Alfred Crosby is widely credited with theorizing and popularizing the idea of "ecological imperialism" to describe how the military conquest of the New World occurred alongside radical and catastrophic changes to its ecology. Crosby argues that an important ramification of these multifarious waves of conquest was the creation of "Neo-Europes" -- areas of intense European settler colonialism, where the physical environment gradually came to share many of the features of comparable temperate zones across the Atlantic. Applying this framework to Hakodate, we may inquire whether its ecological transformation at the hands of new settlers, both from across the Pacific Ocean and the Tsugaru Strait, merits the application of the term "ecological imperialism." In other words, might we be able to label Hakodate, and Hokkaido more broadly, as a "Neo-America" or a "Neo-Japan"?
 
