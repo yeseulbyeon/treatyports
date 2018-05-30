@@ -54,7 +54,7 @@ tabular_tidy <- tabular %>%
 names(tabular_tidy)[7:11] = c("All_Bovine", "All_Horses", "Malnutrition_Deaths", "Bovine_Bred", "Horses_Bred")
 ```
 
-```{r animal-consumption-clean, echo = FALSE}
+```{r animal-consumption-clean, echo = FALSE, warning = FALSE}
 animal_products <- read_xlsx('data/animal_products_japan.xlsx')
 
 ggplot(data = animal_products, aes(x = Year, y = Raw_Milk))+
@@ -138,7 +138,7 @@ new_shp <- new_shp %>%
 
 
 
-```{r loading-basemaps, eval = FALSE}
+```{r loading-basemaps, eval = FALSE, echo = FALSE}
 hokkaido <- ggplot(data = hokkaido1887_process, mapping = aes(x = long, y = lat, group = group)) + 
   coord_fixed(1.3) + 
   geom_polygon(color = "#252525", fill = "#a6bddb", size = 0.2)
@@ -165,7 +165,7 @@ joined <- ggplot(data = joined, mapping = aes(x = long, y = lat, group = group))
 
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 sum_tabular_cows <- tabular_tidy %>%
   group_by(Kuni_ID, Kuni_Nm) %>%
   summarize(cows_count = sum(All_Bovine, na.rm = TRUE))

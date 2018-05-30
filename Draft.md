@@ -20,55 +20,9 @@ If human interactions with whales inform the early seaward development of Hakoda
 
 Since there is a dearth of English-language research specifically dedicated to the environmental history of Hakodate, I consider my role in this project to be one of a archaeological curator: piecing together disparate fragments and imputing missing values to arrive at an approximate picture.
 
-    ## Warning: Removed 12 rows containing missing values (position_stack).
+![](Draft_files/figure-markdown_github/animal-consumption-clean-1.png)![](Draft_files/figure-markdown_github/animal-consumption-clean-2.png)
 
-![](Draft_files/figure-markdown_github/animal-consumption-clean-1.png)
-
-    ## Warning: Removed 14 rows containing missing values (position_stack).
-
-![](Draft_files/figure-markdown_github/animal-consumption-clean-2.png)
-
-``` r
-hokkaido <- ggplot(data = hokkaido1887_process, mapping = aes(x = long, y = lat, group = group)) + 
-  coord_fixed(1.3) + 
-  geom_polygon(color = "#252525", fill = "#a6bddb", size = 0.2)
-
-
-japan_kuni <- ggplot(data = japan1887_kuni_process, mapping = aes(x = long, y = lat, group = group)) + 
-  coord_fixed(1.3) + 
-  geom_polygon(color = "#252525", fill = "#a6bddb", size = 0.2)
-
-ggplot(data = japan1887_ken_process, mapping = aes(x = long, y = lat, group = group)) + 
-  coord_fixed(1.3) + 
-  geom_polygon(color = "#252525", fill = "#a6bddb", size = 0.2) +
-  geom_text(label = Ken_Nm)
-
-japan1887_ken_process
-
-japan_gun <- ggplot(data = japan1887_gun_process, mapping = aes(x = long, y = lat, group = group)) + 
-  coord_fixed(1.3) + 
-  geom_polygon(color = '#252525', fill = "#a6bddb", size = 0.2)
-
-joined <- ggplot(data = joined, mapping = aes(x = long, y = lat, group = group)) + 
-  coord_fixed(1.3) + 
-  geom_polygon(color = "#252525", fill = "#a6bddb", size = 0.2)
-```
-
-    ## Warning: Unknown or uninitialised column: 'region'.
-
-    ## Warning: Ignoring unknown aesthetics: x, y
-
-    ## Warning: Unknown or uninitialised column: 'region'.
-
-![](Draft_files/figure-markdown_github/unnamed-chunk-1-1.png)
-
-    ## Warning: Unknown or uninitialised column: 'region'.
-
-    ## Warning: Ignoring unknown aesthetics: x, y
-
-    ## Warning: Unknown or uninitialised column: 'region'.
-
-![](Draft_files/figure-markdown_github/unnamed-chunk-1-2.png)
+![](Draft_files/figure-markdown_github/unnamed-chunk-1-1.png)![](Draft_files/figure-markdown_github/unnamed-chunk-1-2.png)
 
 Bibliography
 ------------
